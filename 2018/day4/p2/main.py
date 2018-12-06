@@ -7,8 +7,8 @@ def main():
     with open('input.txt', 'r') as f:
         inputLines = []
         for line in f:
-            boxId = line.rstrip('\n')
-            matches = re.match(r'\[(\d{4}-\d\d-\d\d) (\d\d:\d\d)\] (.*)', boxId)
+            line = line.rstrip('\n')
+            matches = re.match(r'\[(\d{4}-\d\d-\d\d) (\d\d:\d\d)\] (.*)', line)
             inputLines.append(matches.groups())
 
         sortedInput = sorted(inputLines, key=lambda v: datetime.strptime('{} {}'.format(v[0], v[1]), "%Y-%m-%d %H:%M"))
