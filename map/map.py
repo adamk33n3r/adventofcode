@@ -1,6 +1,21 @@
+import heapq
+from collections import defaultdict
+
 from .node import Node
 
 class Map(dict):
+    @staticmethod
+    def loadFromFile(file, default = '?'):
+        m = Map()
+        y = 0
+        for line in file:
+            x = 0
+            for v in line.strip():
+                Node(m, x, y, v)
+                x += 1
+            y += 1
+        return m
+
     def __init__(self, default = '?'):
         super().__init__()
         self.default = default
@@ -16,6 +31,13 @@ class Map(dict):
     def unitAt(self, node):
         l = [unit for unit in self.units if unit.node == node]
         return l[0] if l else None
+
+    @property
+    def width(self):
+        return self.maxX - self.minX + 1
+    @property
+    def height(self):
+        return self.maxY - self.minY + 1
     
     # @property
     # def minX(self):
@@ -29,6 +51,30 @@ class Map(dict):
     # @property
     # def maxY(self):
     #     return max(self.keys(), key=lambda kv: kv[1])[1]
+
+
+    def dijkstra(self, start, destination):
+        queue = [(0, start)]
+        mindist = defaultdict(lambda: float('inf'), { start: 0 })
+        visited = set()
+
+        while queue:
+            dist, node = heapq.heappop(queue)
+            if node == destination:
+                return dist
+            
+            if node in visited:
+                continue
+
+            visited.add(node)
+
+            for neighbor in node.adj:
+                newdist = dist + int(neighbor.type)
+
+                if newdist < mindist[neighbor]:
+                    mindist[neighbor] = newdist
+                    heapq.heappush(queue, (newdist, neighbor))
+        return float('inf')
 
     def trim(self):
         minX = self.minX
