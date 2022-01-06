@@ -5,7 +5,7 @@ from .node import Node
 
 class Map(dict):
     @staticmethod
-    def loadFromFile(file, default = '?'):
+    def loadFromFile(file, default = '.'):
         m = Map()
         y = 0
         for line in file:
@@ -16,7 +16,7 @@ class Map(dict):
             y += 1
         return m
 
-    def __init__(self, default = '?'):
+    def __init__(self, default = '.'):
         super().__init__()
         self.default = default
         # print('in map init')
@@ -27,6 +27,8 @@ class Map(dict):
         self.minY = 0
         self.maxX = 0
         self.maxY = 0
+        self.minZ = 0
+        self.maxZ = 0
 
     def unitAt(self, node):
         l = [unit for unit in self.units if unit.node == node]
@@ -38,6 +40,9 @@ class Map(dict):
     @property
     def height(self):
         return self.maxY - self.minY + 1
+    @property
+    def depth(self):
+        return self.maxZ - self.minZ + 1
     
     # @property
     # def minX(self):
@@ -79,17 +84,22 @@ class Map(dict):
     def trim(self):
         minX = self.minX
         minY = self.minY
+        minZ = self.minZ
         maxX = self.maxX
         maxY = self.maxY
-        self.minX = 0
-        self.minY = 0
-        self.maxX = 0
-        self.maxY = 0
+        maxZ = self.maxZ
+        self.minX = float('inf')
+        self.minY = float('inf')
+        self.minZ = float('inf')
+        self.maxX = -float('inf')
+        self.maxY = -float('inf')
+        self.maxZ = -float('inf')
         for x in range(minX, maxX + 1):
             for y in range(minY, maxY + 1):
-                node = self.get((x, y))
-                if node and node.type != self.default:
-                    self.__setbounds((x, y))
+                for z in range(minZ, maxZ + 1):
+                    node = self.get((x, y, z))
+                    if node and node.type != self.default:
+                        self.__setbounds((x, y, z))
 
     def print(self, empty = None):
         tmp = self.default
@@ -108,22 +118,28 @@ class Map(dict):
             self.minY = key[1]
         if key[1] > self.maxY:
             self.maxY = key[1]
+        if key[2] < self.minZ:
+            self.minZ = key[2]
+        if key[2] > self.maxZ:
+            self.maxZ = key[2]
 
     def __getitem__(self, key):
+        if len(key) < 3:
+            key += (0,)
         if key in self:
             return super().__getitem__(key)
-        return Node(self, key[0], key[1], self.default)
+        return Node(self, key, self.default)
     
     def __setitem__(self, key, val) -> None:
         self.__setbounds(key)
         return super().__setitem__(key, val)
 
-    def __str__(self):
+    def toString(self, z = 0):
         self.trim()
         ret = ''
         for y in range(self.minY, self.maxY + 1):
             for x in range(self.minX, self.maxX + 1):
-                node = self.get((x, y))
+                node = self.get((x, y, z))
                 if x == self.minX:
                     ret += '\n'
 
@@ -135,6 +151,9 @@ class Map(dict):
                     ret += str(node.type) if node else self.default
 
         return ret[1:]
+
+    def __str__(self):
+        return self.toString()
         # for (x, _), node in sorted(self.items(), lambda kv: kv[1]):
         #     if x == 0:
         #         ret += '\n'

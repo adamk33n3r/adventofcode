@@ -6,6 +6,7 @@ class Unit:
         self.type = type
         self.node = node
         self.map = node.map
+        self.map.units.append(self)
 
     def __str__(self):
         return '({}, {}): {}'.format(self.node.x, self.node.y, self.type)

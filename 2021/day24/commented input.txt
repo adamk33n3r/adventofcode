@@ -1,0 +1,277 @@
+9
+inp w
+mul x 0     clear x
+add x z     copy z into x
+mod x 26    treat x as a letter index with wrapping?
+div z 1     truncate z
+add x 12    add 12 to x
+eql x w     x becomes 1 if x is the same as the model number digit
+eql x 0     invert x
+mul y 0     clear y
+add y 25    put 25 in y
+mul y x     if x WAS the digit in the model number, clear y
+add y 1     add 1 to y. y is now either 1 or 26
+mul z y     z = z * y
+mul y 0     clear y
+add y w     put model number digit into y
+add y 4     add 4 to y
+mul y x     if x WAS the digit in the model number, clear y
+add z y     z += y
+
+z starts at 0
+0 times (1 if x was digit, 26 if not)
+z += model number digit + 4 if x is digit
+
+inp w
+mul x 0     clear x
+add x z     copy z into x
+mod x 26    treat x as a letter index with wrapping?
+div z 1     truncate z
+add x 11    add 11 to x | 16->24
+eql x w     x becomes 1 if x is the same as the model number digit
+eql x 0     invert x
+mul y 0     clear y
+add y 25    put 25 in y
+mul y x     if x WAS the digit, clear y
+add y 1     add 1 to y. y is now either 1 or 26
+mul z y     z = z * y
+mul y 0     clear y
+add y w     put digit into y
+add y 10    add 10 to y
+mul y x     if x WAS the digit, clear y
+add z y     z += y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 14
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 12
+mul y x
+add z y
+
+#4
+inp w       9
+mul x 0
+add x z     9303
+mod x 26    x = 21
+div z 26    z = 357
+add x -6    x = 15
+eql x w     x = 0
+eql x 0     x = 1
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 14
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 15
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 6
+mul y x
+add z y
+
+inp w       2
+mul x 0     clear x
+add x z     put previous z into x | 241945
+mod x 26    x letter idx | 15
+div z 1     truncate z | 241945
+add x 12    x += 12 | 27
+eql x w     x == 2 | 0
+eql x 0     x = 1
+mul y 0     y = 0
+add y 25    y = 25
+mul y x     y = 25
+add y 1     y = 26
+mul z y     241945 * 26 | 6290570
+mul y 0     y = 0
+add y w     y = 2
+add y 16    y = 18
+mul y x     y = 18
+add z y     6290570 + 18 = 6290588
+
+# brings down big time with 6th digit being a 2 and this is 9, or 1 and 8
+inp w       9
+mul x 0     x = 0
+add x z     copy z into x | 6290588
+mod x 26    x letter index | 18
+div z 26    how many times did we loop through the letters previously | 241945
+add x -9    18 - 9 | 9
+eql x w     9 == 9 | 1
+eql x 0     invert x | 0
+mul y 0     y = 0
+add y 25    y = 25
+mul y x     y = 0
+add y 1     y = 1
+mul z y     241945
+mul y 0     y = 0
+add y w     y = 9
+add y 1     y = 10
+mul y x     y = 0
+add z y     z = 241945
+
+#8
+# is 9?
+inp w       9
+mul x 0     x = 0
+add x z     x = 241945
+mod x 26    x = 15
+div z 1     z = 241945
+add x 14    x = 29
+eql x w     29 == 9 = 0
+eql x 0     x = 1
+mul y 0     y = 0
+add y 25    y = 25
+mul y x     y = 25
+add y 1     y = 26
+mul z y     z = 6290570
+mul y 0     y = 0
+add y w     y = 9
+add y 7     y = 16
+mul y x     y = 16
+add z y     z = 6290586
+
+inp w       6
+mul x 0     x = 0
+add x z     x = 6290586
+mod x 26    x = 16
+div z 1
+add x 14    x = 30
+eql x w     0
+eql x 0     1
+mul y 0     y = 0
+add y 25    y = 25
+mul y x     y = 25
+add y 1     y = 26
+mul z y     z = 6290586 * 26 = 163555236
+mul y 0     y = 0
+add y w     y = 6
+add y 8     y = 14
+mul y x     y = 14
+add z y     163555250
+
+#10
+inp w       9
+mul x 0     x = 0
+add x z     x = z
+mod x 26    x = 14
+div z 26    6290586
+add x -5    x = 9
+eql x w     x = 1
+eql x 0     x = 0
+mul y 0
+add y 25
+mul y x     y = 0
+add y 1     y = 1
+mul z y     z = z
+mul y 0     
+add y w     y = 9
+add y 11    y = 20
+mul y x     y = 0
+add z y     z = z
+
+#11
+inp w       7
+mul x 0
+add x z
+mod x 26    16
+div z 26
+add x -9    x = 7
+eql x w     1
+eql x 0     0
+mul y 0
+add y 25
+mul y x
+add y 1     26
+mul z y
+mul y 0
+add y w     y = 7
+add y 8     y = 15
+mul y x     y = 0
+add z y     z = 241945
+
+#12
+inp w       1
+mul x 0
+add x z     
+mod x 26    x = 15
+div z 26    9305
+add x -5    x = 10
+eql x w     0
+eql x 0     x = 1
+mul y 0
+add y 25    y = 25
+mul y x     y = 25
+add y 1     y = 26
+mul z y     241930
+mul y 0
+add y w     y = 1
+add y 3     y = 4
+mul y x     y = 4
+add z y     z = 241934
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -2
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -7
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 8
+mul y x
+add z y
