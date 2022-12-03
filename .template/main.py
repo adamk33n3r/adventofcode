@@ -7,6 +7,8 @@ from map import Map, Node
 USE_EXAMPLE = True
 PRINT_DEBUG = False
 
+LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
 # Part 1
 with open('example.txt' if USE_EXAMPLE else 'input.txt') as file:
     # comma seperated values
