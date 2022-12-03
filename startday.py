@@ -11,7 +11,12 @@ if __name__ == '__main__':
     year = sys.argv[2]
     day = sys.argv[3]
     dayPath = os.path.join(year, 'day'+day)
+    if os.path.exists(dayPath):
+        print('Day already exists. Exiting', file=sys.stderr)
+        sys.exit()
     shutil.copytree('.template', dayPath)
+    with open(os.path.join(dayPath, 'README.md'), 'w') as file:
+        file.write('# Day ' + day + '\n')
     inputData = requests.get('https://adventofcode.com/%s/day/%s/input' % (year, day), cookies={'session': token}).text
     with open(os.path.join(dayPath, 'input.txt'), 'w') as file:
         file.writelines(inputData)
