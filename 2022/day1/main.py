@@ -21,13 +21,7 @@ with open('example.txt' if USE_EXAMPLE else 'input.txt') as file:
             if len(elves) <= elfNum:
                 elves.append(0)
             elves[elfNum] += int(line)
-    biggest = float('-inf')
-    elfNum = 0
-    for i, elf in enumerate(elves):
-        if elf > biggest:
-            biggest = elf
-            elfNum = i
-    print(biggest)
+    print(max(elves))
         
 
 # Part 2
@@ -45,9 +39,9 @@ with open('example.txt' if USE_EXAMPLE else 'input.txt') as file:
                 elves.append(0)
             elves[elfNum] += int(line)
 
-    biggest = float('-inf')
-    elfNum = 0
+    print(sum(sorted(elves)[-3:]))
+
     mostest = PriorityQueue()
-    for i, elf in enumerate(elves):
-        mostest.put((-elf, i))
-    print(-mostest.get()[0]+-mostest.get()[0]+-mostest.get()[0])
+    for elf in elves:
+        mostest.put(-elf)
+    print(-mostest.get()+-mostest.get()+-mostest.get())
