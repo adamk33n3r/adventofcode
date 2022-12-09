@@ -103,3 +103,35 @@ with open('example.txt' if USE_EXAMPLE else 'input.txt') as file:
                 maxScenicScore = scenicScore
     
     print(maxScenicScore)
+
+# Upgrade to Map to support slices. It's a whole lot slower than the above solution though
+with open('example.txt' if USE_EXAMPLE else 'input.txt') as file:
+    map = Map.loadFromFile(file)
+    # print(map)
+    # print(map.row(2))
+    # print(map[:3,2])
+    # print(map[3:,2])
+    # print(map[::2,2])
+    for y in range(map.height):
+        if y == 0 or y == map.height - 1:
+            continue
+        for x in range(map.width):
+            if x == 0 or x == map.width - 1:
+                continue
+            tree = int(map[x, y].type)
+            left = [int(x.type) for x in map.row(y, slice(x))]
+            right = [int(x.type) for x in map.row(y, slice(x+1, None))]
+            up = [int(tx.type) for tx in map.col(x, slice(y))]
+            down = [int(tx.type) for tx in map.col(x, slice(y+1, None))]
+            # print(down)
+
+            l = getViewDistance(tree, reversed(left))
+            r = getViewDistance(tree, right)
+            u = getViewDistance(tree, reversed(up))
+            d = getViewDistance(tree, down)
+
+            scenicScore = l * r * u * d
+            if scenicScore > maxScenicScore:
+                maxScenicScore = scenicScore
+    
+    print(maxScenicScore)

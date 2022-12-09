@@ -11,7 +11,7 @@ class Map(dict):
         for line in file:
             x = 0
             for v in line.strip():
-                Node(m, x, y, v)
+                Node(m, (x, y), v)
                 x += 1
             y += 1
         return m
@@ -56,6 +56,16 @@ class Map(dict):
     # @property
     # def maxY(self):
     #     return max(self.keys(), key=lambda kv: kv[1])[1]
+
+    def row(self, row: int, slc: slice = None):
+        if slc is None:
+            slc = slice(None)
+        return [self[x, row] for x in range(*slc.indices(self.width))]
+
+    def col(self, col: int, slc: slice = None):
+        if slc is None:
+            slc = slice(None)
+        return [self[col, y] for y in range(*slc.indices(self.height))]
 
 
     def dijkstra(self, start, destination):
@@ -126,6 +136,16 @@ class Map(dict):
     def __getitem__(self, key):
         if len(key) < 3:
             key += (0,)
+        # I think we need to change map to be a multi dimensional list rather
+        # than a dict to support slices...
+        # if isinstance(key[0], slice):
+        #     # print(key)
+        #     xSlice = key[0].indices(self.width)
+        #     print(xSlice)
+        #     for x in range(*xSlice):
+        #         print(x)
+        #     ySlice = key[1].indices(self.height)
+        #     # zSlice = key[3].indices(self.height)
         if key in self:
             return super().__getitem__(key)
         return Node(self, key, self.default)
