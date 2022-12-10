@@ -60,8 +60,44 @@ class Node(BaseNode):
         return self.map.get((self.x - 1, self.y - 1, self.z), None)
 
     @property
+    def upDefault(self) -> BaseNode:
+        return self.map[self.x, self.y - 1, self.z]
+
+    @property
+    def downDefault(self) -> BaseNode:
+        return self.map[self.x, self.y + 1, self.z]
+
+    @property
+    def leftDefault(self) -> BaseNode:
+        return self.map[self.x - 1, self.y, self.z]
+
+    @property
+    def rightDefault(self) -> BaseNode:
+        return self.map[self.x + 1, self.y, self.z]
+
+    @property
+    def rightDownDefault(self) -> BaseNode:
+        return self.map[self.x + 1, self.y + 1, self.z]
+
+    @property
+    def rightUpDefault(self) -> BaseNode:
+        return self.map[self.x + 1, self.y - 1, self.z]
+
+    @property
+    def leftDownDefault(self) -> BaseNode:
+        return self.map[self.x - 1, self.y + 1, self.z]
+
+    @property
+    def leftUpDefault(self) -> BaseNode:
+        return self.map[self.x - 1, self.y - 1, self.z]
+
+    @property
     def adj(self) -> Tuple[BaseNode]:
         return filter(None, (self.up, self.left, self.down, self.right))
+
+    @property
+    def adjDefault(self) -> Tuple[BaseNode]:
+        return filter(None, (self.upDefault, self.leftDefault, self.downDefault, self.rightDefault))
 
     @property
     def adj2(self) -> Tuple[BaseNode]:
@@ -70,3 +106,11 @@ class Node(BaseNode):
     @property
     def surround(self) -> Tuple[BaseNode]:
         return filter(None, (self.leftUp, self.up, self.rightUp, self.left, self, self.right, self.leftDown, self.down, self.rightDown))
+
+    @property
+    def diag(self) -> Tuple[BaseNode]:
+        return filter(None, (self.leftUp, self.rightUp, self.rightDown, self.leftDown))
+
+    @property
+    def diagDefault(self) -> Tuple[BaseNode]:
+        return filter(None, (self.leftUpDefault, self.rightUpDefault, self.rightDownDefault, self.leftDownDefault))
