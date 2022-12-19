@@ -1,5 +1,6 @@
 import heapq
 from collections import defaultdict
+from typing import Callable
 
 from .node import Node
 
@@ -68,9 +69,11 @@ class Map(dict):
         return [self[col, y] for y in range(*slc.indices(self.height))]
 
 
-    def dijkstra(self, start, destination):
-        queue = [(0, start)]
-        mindist = defaultdict(lambda: float('inf'), { start: 0 })
+    def dijkstra(self, start: Node, destination: Node, typeTransform: Callable = None, condition: Callable = None, init = None):
+        if init is None:
+            init = [(0, start)]
+        queue = init[:]
+        mindist = defaultdict(lambda: float('inf'), { n: 0 for n in init })
         visited = set()
 
         while queue:
@@ -84,9 +87,9 @@ class Map(dict):
             visited.add(node)
 
             for neighbor in node.adj:
-                newdist = dist + int(neighbor.type)
+                newdist = dist + (int(neighbor.type) if typeTransform is None else typeTransform(neighbor.type))
 
-                if newdist < mindist[neighbor]:
+                if condition and condition(neighbor, node) or not condition and newdist < mindist[neighbor]:
                     mindist[neighbor] = newdist
                     heapq.heappush(queue, (newdist, neighbor))
         return float('inf')
