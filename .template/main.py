@@ -1,8 +1,8 @@
 import sys
 sys.path.append('../..')
 import re
-from collections import defaultdict
-from map import Map, Node
+from collections import defaultdict, deque
+from map import Map, Node, Unit
 
 USE_EXAMPLE = True
 PRINT_DEBUG = False

@@ -1,8 +1,10 @@
 import heapq
 from collections import defaultdict
-from typing import Callable
+from typing import Callable, TYPE_CHECKING
 
 from .node import Node
+if TYPE_CHECKING:
+    from .unit import Unit
 
 class Map(dict):
     @staticmethod
@@ -21,7 +23,7 @@ class Map(dict):
         super().__init__()
         self.default = default
         # print('in map init')
-        self.units = []
+        self.units: list[Unit] = []
         # print('setting units to empty')
         # print(units)
         self.minX = 0
@@ -60,13 +62,14 @@ class Map(dict):
 
     def row(self, row: int, slc: slice = None):
         if slc is None:
-            slc = slice(None)
-        return [self[x, row] for x in range(*slc.indices(self.width))]
+            slc = slice(self.minX, self.maxX, 1)
+        # return [self[x, row] for x in range(*slc.indices(self.width))]
+        return [self[x, row] for x in range(slc.start, slc.stop, slc.step)]
 
     def col(self, col: int, slc: slice = None):
         if slc is None:
-            slc = slice(None)
-        return [self[col, y] for y in range(*slc.indices(self.height))]
+            slc = slice(self.minY, self.maxY, 1)
+        return [self[col, y] for y in range(slc.start, slc.stop, slc.step)]
 
 
     def dijkstra(self, start: Node, destination: Node, typeTransform: Callable = None, condition: Callable = None, init = None):
@@ -111,16 +114,18 @@ class Map(dict):
             for y in range(minY, maxY + 1):
                 for z in range(minZ, maxZ + 1):
                     node = self.get((x, y, z))
-                    if node and node.type != self.default:
-                        self.__setbounds((x, y, z))
+                    if node:
+                        if node.type != self.default or self.unitAt(node):
+                            self.__setbounds((x, y, z))
+        for unit in self.units:
+            self.__setbounds(unit.node.pos)
 
     def print(self, empty = None):
         tmp = self.default
         if empty is not None:
             self.default = empty
         print(self)
-        if tmp:
-            self.default = tmp
+        self.default = tmp
 
     def __setbounds(self, key):
         if key[0] < self.minX:
@@ -160,13 +165,14 @@ class Map(dict):
     def toString(self, z = 0):
         self.trim()
         ret = ''
-        for y in range(self.minY, self.maxY + 1):
-            for x in range(self.minX, self.maxX + 1):
+        unitNodes = {u.node: u for u in self.units}
+        startY = min(self.minY, 0)
+        startX = min(self.minX, 0)
+        for y in range(startY, self.maxY + 1):
+            for x in range(startX, self.maxX + 1):
                 node = self.get((x, y, z))
-                if x == self.minX:
+                if x == startX:
                     ret += '\n'
-
-                unitNodes = {u.node: u for u in self.units}
 
                 if node in unitNodes:
                     ret += str(unitNodes[node].type)
@@ -188,4 +194,4 @@ class Map(dict):
         #     else:
         #         ret += node.type
 
-        # return ret[1:]
+        # re
