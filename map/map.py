@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 class Map(dict):
     @staticmethod
     def loadFromFile(file, default = '.'):
-        m = Map()
+        m = Map(default)
         y = 0
         for line in file:
             x = 0
