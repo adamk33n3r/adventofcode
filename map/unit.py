@@ -10,3 +10,5 @@ class Unit:
 
     def __str__(self):
         return '({}, {}): {}'.format(self.node.x, self.node.y, self.type)
+    def __repr__(self):
+        return self.__str__()
