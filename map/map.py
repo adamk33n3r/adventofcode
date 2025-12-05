@@ -1,6 +1,6 @@
 import heapq
 from collections import defaultdict
-from typing import Callable, TYPE_CHECKING
+from typing import Callable, TextIO, TYPE_CHECKING
 
 from .node import Node
 if TYPE_CHECKING:
@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class Map(dict):
     @staticmethod
-    def loadFromFile(file, default = '.'):
+    def loadFromFile(file: TextIO, default: str = '.'):
         m = Map(default)
         y = 0
         for line in file:
